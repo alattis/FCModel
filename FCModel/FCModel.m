@@ -1424,12 +1424,14 @@ static inline BOOL checkForOpenDatabaseFatal(BOOL fatal)
     }
     
     if (! enqueued) {
-        onMainThreadAsync(^{
-            [NSNotificationCenter.defaultCenter postNotificationName:name object:self.class userInfo:@{
-                FCModelInstanceSetKey : instance ? [NSSet setWithObject:instance] : [NSSet setWithArray:self.allLoadedInstances],
-                FCModelChangedFieldsKey : changedFields
-            }];
-        });
+        if ((instance || self.allLoadedInstances.count) && changedFields.count) {
+            onMainThreadAsync(^{
+                [NSNotificationCenter.defaultCenter postNotificationName:name object:self.class userInfo:@{
+                                                                                                           FCModelInstanceSetKey : instance ? [NSSet setWithObject:instance] : [NSSet setWithArray:self.allLoadedInstances],
+                                                                                                           FCModelChangedFieldsKey : changedFields
+                                                                                                           }];
+            });
+        }
     }
 }
 
