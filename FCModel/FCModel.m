@@ -1370,10 +1370,12 @@ static inline BOOL checkForOpenDatabaseFatal(BOOL fatal)
             [notificationsToSend enumerateKeysAndObjectsUsingBlock:^(Class class, NSDictionary *notificationsForClass, BOOL *stopOuter) {
                 NSArray *keys = [notificationsForClass.allKeys sortedArrayUsingComparator:notificationComparator];
                 for (NSString *key in keys) {
-                    [NSNotificationCenter.defaultCenter postNotificationName:key object:class userInfo:@{
-                        FCModelInstanceSetKey : notificationsForClass[key],
-                        FCModelChangedFieldsKey : changedFields[class]
-                    }];
+                    if (notificationsForClass[key] && changedFields[class]) {
+                        [NSNotificationCenter.defaultCenter postNotificationName:key object:class userInfo:@{
+                                                                                                             FCModelInstanceSetKey : notificationsForClass[key],
+                                                                                                             FCModelChangedFieldsKey : changedFields[class]
+                                                                                                             }];
+                    }
                 }
             }];
         });
