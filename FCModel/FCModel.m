@@ -1398,7 +1398,7 @@ static inline BOOL checkForOpenDatabaseFatal(BOOL fatal)
     BOOL enqueued = NO;
     
     NSMutableDictionary *enqueuedBatchNotifications = thread.threadDictionary[FCModelEnqueuedBatchNotificationsKey];
-    if (enqueuedBatchNotifications) {
+    if (enqueuedBatchNotifications && [enqueuedBatchNotifications isKindOfClass:[NSDictionary class]]) {
         id class = (id) self;
         NSMutableDictionary *notificationsForClass = enqueuedBatchNotifications[class];
         if (! notificationsForClass) {
