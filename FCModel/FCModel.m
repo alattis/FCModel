@@ -1407,7 +1407,11 @@ static inline BOOL checkForOpenDatabaseFatal(BOOL fatal)
         }
 
         NSMutableDictionary *enqueuedBatchChangedFields = thread.threadDictionary[FCModelEnqueuedBatchChangedFieldsKey];
-        NSMutableSet *changedFieldsForClass = enqueuedBatchChangedFields[class];
+        NSMutableSet *changedFieldsForClass;
+        if ([enqueuedBatchChangedFields isKindOfClass:[NSDictionary class]]) {
+            changedFieldsForClass = enqueuedBatchChangedFields[class];
+        }
+        
         if (! changedFieldsForClass) {
             changedFieldsForClass = [NSMutableSet set];
             enqueuedBatchChangedFields[class] = changedFieldsForClass;
